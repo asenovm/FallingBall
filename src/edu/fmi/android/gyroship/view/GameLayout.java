@@ -10,6 +10,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.FloatMath;
 import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
@@ -85,7 +86,7 @@ public class GameLayout extends RelativeLayout implements SensorEventListener {
 				.getSystemService(Context.SENSOR_SERVICE);
 		sensorManager.registerListener(this,
 				sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-				SensorManager.SENSOR_DELAY_GAME);
+				SensorManager.SENSOR_DELAY_UI);
 	}
 
 	public GameLayout(Context context, AttributeSet attrs) {
@@ -129,8 +130,9 @@ public class GameLayout extends RelativeLayout implements SensorEventListener {
 		final Paint paint = new Paint();
 		paint.setColor(Color.CYAN);
 
-		canvas.drawRect(x, verticalBound - HEIGHT_LINE, Math.round(x + LENGTH_LINE * metersToPixelsX),
-				verticalBound, paint);
+		canvas.drawRect(x, verticalBound - HEIGHT_LINE,
+				Math.round(x + LENGTH_LINE * metersToPixelsX), verticalBound,
+				paint);
 
 		invalidate();
 	}

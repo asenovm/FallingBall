@@ -10,6 +10,14 @@ public class ShipView extends View {
 
 	private float positionY;
 
+	private float accelerationX;
+
+	private float accelerationY;
+
+	private float horizontalBound;
+
+	private float verticalBound;
+
 	public ShipView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 	}
@@ -22,41 +30,16 @@ public class ShipView extends View {
 		this(context, null);
 	}
 
-	public float getPosX() {
-		return positionX;
-	}
-
-	public float getPosY() {
-		return positionY;
-	}
-
-	private float mAccelX;
-	private float mAccelY;
-
 	public void computePhysics(float sx, float sy, float dT) {
 		final float dTdT = dT * dT;
-		final float x = positionX + mAccelX * dTdT;
-		final float y = positionY + mAccelY * dTdT;
+		final float x = positionX + accelerationX * dTdT;
+		final float y = positionY + accelerationY * dTdT;
 		positionX = x;
 		positionY = y;
-		mAccelX = -sx;
-		mAccelY = -sy;
+		accelerationX = -sx;
+		accelerationY = -sy;
 	}
-	
-	public void setBounds(final float horizontalBound, final float verticalBound) {
-		this.horizontalBound = horizontalBound;
-		this.verticalBound = verticalBound;
-	}
-	
-	private float horizontalBound;
-	
-	private float verticalBound;
 
-	/*
-	 * Resolving constraints and collisions with the Verlet integrator can be
-	 * very simple, we simply need to move a colliding or constrained particle
-	 * in such way that the constraint is satisfied.
-	 */
 	public void resolveCollisionWithBounds() {
 		final float xmax = horizontalBound;
 		final float ymax = verticalBound;
@@ -72,6 +55,19 @@ public class ShipView extends View {
 		} else if (y < -ymax) {
 			positionY = -ymax;
 		}
+	}
+
+	public float getPosX() {
+		return positionX;
+	}
+
+	public float getPosY() {
+		return positionY;
+	}
+
+	public void setBounds(final float horizontalBound, final float verticalBound) {
+		this.horizontalBound = horizontalBound;
+		this.verticalBound = verticalBound;
 	}
 
 }
