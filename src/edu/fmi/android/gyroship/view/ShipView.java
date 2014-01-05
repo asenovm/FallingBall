@@ -1,10 +1,46 @@
 package edu.fmi.android.gyroship.view;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 
-public class ShipView extends View {
+public class ShipView extends View implements SensorEventListener {
+
+	/**
+	 * {@value}
+	 */
+	public static final String TAG = ShipView.class.getSimpleName();
+
+	/**
+	 * {@value}
+	 */
+	private static final int HEIGHT_LINE = 20;
+
+	/**
+	 * {@value}
+	 */
+	private static final float NANOSECONDS_IN_A_SECOND = 1000000000.0f;
+
+	/**
+	 * {@value}
+	 */
+	private static final float METRES_IN_INCH = 0.0254f;
+
+	/**
+	 * {@value}
+	 */
+	private static final float LENGTH_LINE = 0.015f;
 
 	private float positionX;
 
@@ -18,8 +54,43 @@ public class ShipView extends View {
 
 	private float verticalBound;
 
+	private float startX;
+
+	private long mLastRenderTime;
+
+	private float mRenderDelta;
+
+	private float metersToPixelsX;
+
+	private float sensorX;
+
+	private float sensorY;
+
+	private long sensorTimeStamp;
+
+	private long cpuTimeStamp;
+
+	private final Paint shipPaint;
+
 	public ShipView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
+
+		final WindowManager windowManager = (WindowManager) context
+				.getSystemService(Context.WINDOW_SERVICE);
+
+		DisplayMetrics metrics = new DisplayMetrics();
+		windowManager.getDefaultDisplay().getMetrics(metrics);
+		metersToPixelsX = metrics.xdpi / METRES_IN_INCH;
+
+		final SensorManager sensorManager = (SensorManager) context
+				.getSystemService(Context.SENSOR_SERVICE);
+		sensorManager.registerListener(this,
+				sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+				SensorManager.SENSOR_DELAY_UI);
+
+		shipPaint = new Paint();
+		shipPaint.setColor(Color.CYAN);
+
 	}
 
 	public ShipView(Context context, AttributeSet attrs) {
@@ -30,44 +101,85 @@ public class ShipView extends View {
 		this(context, null);
 	}
 
-	public void computePhysics(float sx, float sy, float dT) {
-		final float dTdT = dT * dT;
-		final float x = positionX + accelerationX * dTdT;
-		final float y = positionY + accelerationY * dTdT;
-		positionX = x;
-		positionY = y;
-		accelerationX = -sx;
-		accelerationY = -sy;
-	}
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
 
-	public void resolveCollisionWithBounds() {
-		final float xmax = horizontalBound;
-		final float ymax = verticalBound;
-		final float x = positionX;
-		final float y = positionX;
-		if (x > xmax) {
-			positionX = xmax;
-		} else if (x < -xmax) {
-			positionX = -xmax;
+		final long renderTime = sensorTimeStamp
+				+ (System.nanoTime() - cpuTimeStamp);
+
+		if (mLastRenderTime != 0) {
+			final float renderDelta = (renderTime - mLastRenderTime)
+					/ NANOSECONDS_IN_A_SECOND;
+			if (mRenderDelta != 0) {
+				positionX = positionX + accelerationX * renderDelta
+						* renderDelta;
+				positionY = positionY + accelerationY * renderDelta
+						* renderDelta;
+				accelerationX = -sensorX;
+				accelerationY = -sensorY;
+			}
+			mRenderDelta = renderDelta;
 		}
-		if (y > ymax) {
-			positionY = ymax;
-		} else if (y < -ymax) {
-			positionY = -ymax;
+		mLastRenderTime = renderTime;
+
+		if (positionX > horizontalBound) {
+			positionX = horizontalBound;
+		} else if (positionX < -horizontalBound) {
+			positionX = -horizontalBound;
 		}
+		if (positionY > verticalBound) {
+			positionY = verticalBound;
+		} else if (positionY < -verticalBound) {
+			positionY = -verticalBound;
+		}
+
+		final float x = startX + positionX * metersToPixelsX;
+		canvas.drawRect(x, verticalBound - HEIGHT_LINE,
+				Math.round(x + LENGTH_LINE * metersToPixelsX), verticalBound,
+				shipPaint);
+
+		invalidate();
 	}
 
-	public float getPosX() {
-		return positionX;
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// blank
 	}
 
-	public float getPosY() {
-		return positionY;
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		final WindowManager windowManager = (WindowManager) getContext()
+				.getSystemService(Context.WINDOW_SERVICE);
+		final Display display = windowManager.getDefaultDisplay();
+
+		switch (display.getRotation()) {
+		case Surface.ROTATION_0:
+			sensorX = event.values[0];
+			sensorY = event.values[1];
+			break;
+		case Surface.ROTATION_90:
+			sensorX = -event.values[1];
+			sensorY = event.values[0];
+			break;
+		case Surface.ROTATION_180:
+			sensorX = -event.values[0];
+			sensorY = -event.values[1];
+			break;
+		case Surface.ROTATION_270:
+			sensorX = event.values[1];
+			sensorY = -event.values[0];
+			break;
+		}
+
+		sensorTimeStamp = event.timestamp;
+		cpuTimeStamp = System.nanoTime();
 	}
 
-	public void setBounds(final float horizontalBound, final float verticalBound) {
-		this.horizontalBound = horizontalBound;
-		this.verticalBound = verticalBound;
+	public void setDimensions(final int width, final int height) {
+		startX = Math.round(width - LENGTH_LINE * metersToPixelsX) * 0.5f;
+		horizontalBound = (width / metersToPixelsX - LENGTH_LINE) * 0.5f;
+		verticalBound = height;
 	}
 
 }
