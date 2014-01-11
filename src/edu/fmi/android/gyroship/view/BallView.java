@@ -23,12 +23,24 @@ public class BallView extends View {
 	/**
 	 * {@value}
 	 */
-	private static final int ORIENTATION_Y_PAD = 1;
+	private static final int ORIENTATION_Y_PAD = -1;
 
 	/**
 	 * {@value}
 	 */
 	private static final int ORIENTATION_X_PAD = 0;
+
+	private static final int ORIENTATION_Y_BORDER_TOP = 1;
+
+	private static final int ORIENTATION_X_BORDER_TOP = 0;
+
+	private static final int ORIENTATION_Y_BORDER_LEFT = 0;
+
+	private static final int ORIENTATION_X_BORDER_LEFT = 1;
+
+	private static final int ORIENTATION_Y_BORDER_RIGHT = 0;
+
+	private static final int ORIENTATION_X_BORDER_RIGHT = -1;
 
 	/**
 	 * {@value}
@@ -52,6 +64,12 @@ public class BallView extends View {
 	private final Point screenSize;
 
 	private final Vector padVector;
+
+	private final Vector topBorderVector;
+
+	private final Vector leftBorderVector;
+
+	private final Vector rightBorderVector;
 
 	private float positionX;
 
@@ -115,6 +133,12 @@ public class BallView extends View {
 
 		speedVector = new Vector(VELOCITY_X_INITIAL, VELOCITY_Y_INITIAL);
 		padVector = new Vector(ORIENTATION_X_PAD, ORIENTATION_Y_PAD);
+		leftBorderVector = new Vector(ORIENTATION_X_BORDER_LEFT,
+				ORIENTATION_Y_BORDER_LEFT);
+		topBorderVector = new Vector(ORIENTATION_X_BORDER_TOP,
+				ORIENTATION_Y_BORDER_TOP);
+		rightBorderVector = new Vector(ORIENTATION_X_BORDER_RIGHT,
+				ORIENTATION_Y_BORDER_RIGHT);
 
 		boundingRect = new RectF(positionX - RADIUS_BALL, positionY
 				- RADIUS_BALL, positionX + RADIUS_BALL, positionY + RADIUS_BALL);
@@ -132,26 +156,19 @@ public class BallView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
+		if (positionX <= RADIUS_BALL) {
+			computeSpeedVector(leftBorderVector);
+		} else if (positionX >= screenSize.x - RADIUS_BALL) {
+			computeSpeedVector(rightBorderVector);
+		}
+
+		if (positionY < RADIUS_BALL) {
+			computeSpeedVector(topBorderVector);
+		}
+
 		canvas.drawCircle(positionX, positionY, RADIUS_BALL, ballPaint);
+
 		move(speedVector);
-
-		invalidate();
-	}
-
-	public float getX() {
-		return positionX;
-	}
-
-	public float getSpeedY() {
-		return speedVector.y;
-	}
-
-	public float getY() {
-		return positionY;
-	}
-
-	public RectF getRect() {
-		return boundingRect;
 	}
 
 	public void setOnPositionChangedListener(
@@ -160,9 +177,13 @@ public class BallView extends View {
 	}
 
 	public void onCollisionDetected() {
-		speedVector = speedVector.substract(padVector.multiply(2).multiply(
-				speedVector.dotProduct(padVector)));
+		computeSpeedVector(padVector);
 		move(speedVector);
+	}
+
+	private void computeSpeedVector(final Vector collisionVector) {
+		speedVector = speedVector.substract(collisionVector.multiply(2)
+				.multiply(speedVector.dotProduct(collisionVector)));
 	}
 
 	private void move(final Vector speedVector) {

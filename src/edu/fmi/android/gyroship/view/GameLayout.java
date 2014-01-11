@@ -1,12 +1,18 @@
 package edu.fmi.android.gyroship.view;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.widget.RelativeLayout;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import edu.fmi.android.gyroship.OnPositionChangedListener;
 
-public class GameLayout extends RelativeLayout implements
+public class GameLayout extends SurfaceView implements
 		OnPositionChangedListener {
 
 	/**
@@ -23,6 +29,58 @@ public class GameLayout extends RelativeLayout implements
 
 	private RectF ballViewRect;
 
+	private class LayoutRunnable implements Runnable {
+
+		private boolean isDestroyed;
+
+		public void destroy() {
+			isDestroyed = true;
+		}
+
+		@Override
+		public void run() {
+			final SurfaceHolder holder = getHolder();
+			Canvas canvas = null;
+
+			while (!isDestroyed && (canvas = holder.lockCanvas()) != null) {
+				canvas.drawColor(Color.BLACK);
+				padView.draw(canvas);
+				ballView.draw(canvas);
+				holder.unlockCanvasAndPost(canvas);
+			}
+		}
+	}
+
+	private class HolderCallback implements SurfaceHolder.Callback {
+
+		private final ExecutorService executorService;
+
+		private final LayoutRunnable layoutRunnable;
+
+		public HolderCallback() {
+			layoutRunnable = new LayoutRunnable();
+			executorService = Executors.newSingleThreadExecutor();
+		}
+
+		@Override
+		public void surfaceChanged(SurfaceHolder holder, int format, int width,
+				int height) {
+			// blank
+		}
+
+		@Override
+		public void surfaceCreated(SurfaceHolder holder) {
+			executorService.execute(layoutRunnable);
+		}
+
+		@Override
+		public void surfaceDestroyed(SurfaceHolder holder) {
+			layoutRunnable.destroy();
+			executorService.shutdown();
+		}
+
+	}
+
 	public enum GameItem {
 		PAD, BALL;
 	}
@@ -33,11 +91,11 @@ public class GameLayout extends RelativeLayout implements
 		padView = new PadView(context, attrs, defStyle);
 		ballView = new BallView(context, attrs, defStyle);
 
-		addView(padView);
-		addView(ballView);
-
 		padView.setOnPositionChangedListener(this);
 		ballView.setOnPositionChangedListener(this);
+
+		final SurfaceHolder holder = getHolder();
+		holder.addCallback(new HolderCallback());
 
 		padViewRect = new RectF();
 		ballViewRect = new RectF();
@@ -70,8 +128,8 @@ public class GameLayout extends RelativeLayout implements
 	}
 
 	private boolean hasCollision() {
-		return padViewRect.left <= ballViewRect.left
-				&& padViewRect.right >= ballViewRect.right
-				&& padViewRect.top <= ballViewRect.bottom;
+		return padViewRect.left < ballViewRect.right
+				&& padViewRect.right > ballViewRect.left
+				&& padViewRect.top < ballViewRect.bottom;
 	}
 }

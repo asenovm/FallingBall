@@ -1,7 +1,5 @@
 package edu.fmi.android.gyroship.view;
 
-import edu.fmi.android.gyroship.OnPositionChangedListener;
-import edu.fmi.android.gyroship.view.GameLayout.GameItem;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,6 +15,8 @@ import android.view.Display;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
+import edu.fmi.android.gyroship.OnPositionChangedListener;
+import edu.fmi.android.gyroship.view.GameLayout.GameItem;
 
 public class PadView extends View implements SensorEventListener {
 
