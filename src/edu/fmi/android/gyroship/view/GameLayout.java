@@ -1,6 +1,5 @@
 package edu.fmi.android.gyroship.view;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.RectF;
 import android.util.AttributeSet;
@@ -13,6 +12,7 @@ public class GameLayout extends RelativeLayout implements
 	/**
 	 * {@value}
 	 */
+	@SuppressWarnings("unused")
 	private static final String TAG = GameLayout.class.getSimpleName();
 
 	private final PadView padView;
@@ -56,7 +56,6 @@ public class GameLayout extends RelativeLayout implements
 		padView.setDimensions(w, h);
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	public void onPositionChanged(GameItem item, RectF position) {
 		if (item == GameItem.BALL) {
@@ -65,10 +64,14 @@ public class GameLayout extends RelativeLayout implements
 			padViewRect = position;
 		}
 
-		if (padViewRect.left < ballViewRect.left
-				&& padViewRect.right > ballViewRect.right
-				&& padViewRect.top < ballViewRect.top) {
-			ballView.onCollisionDetected(padViewRect);
+		if (hasCollision()) {
+			ballView.onCollisionDetected();
 		}
+	}
+
+	private boolean hasCollision() {
+		return padViewRect.left <= ballViewRect.left
+				&& padViewRect.right >= ballViewRect.right
+				&& padViewRect.top <= ballViewRect.bottom;
 	}
 }

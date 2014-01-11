@@ -131,23 +131,19 @@ public class BallView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+
 		canvas.drawCircle(positionX, positionY, RADIUS_BALL, ballPaint);
-
-		positionY += speedVector.y;
-		positionX += speedVector.x;
-
-		boundingRect.left = positionX - RADIUS_BALL;
-		boundingRect.right = positionX + RADIUS_BALL;
-		boundingRect.top = positionY - 2 * RADIUS_BALL;
-		boundingRect.bottom = positionY + 2 * RADIUS_BALL;
-
-		listener.onPositionChanged(GameItem.BALL, boundingRect);
+		move(speedVector);
 
 		invalidate();
 	}
 
 	public float getX() {
 		return positionX;
+	}
+
+	public float getSpeedY() {
+		return speedVector.y;
 	}
 
 	public float getY() {
@@ -163,12 +159,15 @@ public class BallView extends View {
 		this.listener = listener;
 	}
 
-	public void onCollisionDetected(final RectF containerRect) {
+	public void onCollisionDetected() {
 		speedVector = speedVector.substract(padVector.multiply(2).multiply(
 				speedVector.dotProduct(padVector)));
+		move(speedVector);
+	}
 
-		positionX += speedVector.x;
+	private void move(final Vector speedVector) {
 		positionY += speedVector.y;
+		positionX += speedVector.x;
 
 		boundingRect.set(positionX - RADIUS_BALL, positionY - RADIUS_BALL,
 				positionX + RADIUS_BALL, positionY + RADIUS_BALL);
