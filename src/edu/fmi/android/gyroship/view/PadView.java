@@ -1,9 +1,12 @@
 package edu.fmi.android.gyroship.view;
 
+import edu.fmi.android.gyroship.OnPositionChangedListener;
+import edu.fmi.android.gyroship.view.GameLayout.GameItem;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,12 +18,12 @@ import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 
-public class ShipView extends View implements SensorEventListener {
+public class PadView extends View implements SensorEventListener {
 
 	/**
 	 * {@value}
 	 */
-	public static final String TAG = ShipView.class.getSimpleName();
+	public static final String TAG = PadView.class.getSimpleName();
 
 	/**
 	 * {@value}
@@ -72,7 +75,11 @@ public class ShipView extends View implements SensorEventListener {
 
 	private final Paint shipPaint;
 
-	public ShipView(Context context, AttributeSet attrs, int defStyleAttr) {
+	private final RectF boundingRect;
+
+	private OnPositionChangedListener listener;
+
+	public PadView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 
 		final WindowManager windowManager = (WindowManager) context
@@ -91,13 +98,14 @@ public class ShipView extends View implements SensorEventListener {
 		shipPaint = new Paint();
 		shipPaint.setColor(Color.CYAN);
 
+		boundingRect = new RectF();
 	}
 
-	public ShipView(Context context, AttributeSet attrs) {
+	public PadView(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
 	}
 
-	public ShipView(Context context) {
+	public PadView(Context context) {
 		this(context, null);
 	}
 
@@ -135,9 +143,10 @@ public class ShipView extends View implements SensorEventListener {
 		}
 
 		final float x = startX + positionX * metersToPixelsX;
-		canvas.drawRect(x, verticalBound - HEIGHT_LINE,
-				Math.round(x + LENGTH_LINE * metersToPixelsX), verticalBound,
-				shipPaint);
+		boundingRect.set(Math.max(0, x), verticalBound - HEIGHT_LINE,
+				Math.round(x + LENGTH_LINE * metersToPixelsX), verticalBound);
+		canvas.drawRect(boundingRect, shipPaint);
+		listener.onPositionChanged(GameItem.PAD, boundingRect);
 
 		invalidate();
 	}
@@ -180,6 +189,19 @@ public class ShipView extends View implements SensorEventListener {
 		startX = Math.round(width - LENGTH_LINE * metersToPixelsX) * 0.5f;
 		horizontalBound = (width / metersToPixelsX - LENGTH_LINE) * 0.5f;
 		verticalBound = height;
+	}
+
+	public float getX() {
+		return positionX;
+	}
+
+	public float getY() {
+		return positionY;
+	}
+
+	public void setOnPositionChangedListener(
+			final OnPositionChangedListener listener) {
+		this.listener = listener;
 	}
 
 }
