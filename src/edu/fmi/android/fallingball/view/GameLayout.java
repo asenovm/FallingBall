@@ -36,15 +36,19 @@ public class GameLayout extends SurfaceView implements
 
 	private final ResultsView resultsView;
 
+	private final FinishedGameView finishedGameView;
+
 	private RectF padViewRect;
 
 	private RectF ballViewRect;
 
 	private OnGameEventsListener gameEventsListener;
 
+	private boolean isGameFinished;
+
 	private class LayoutRunnable implements Runnable {
 
-		private boolean isDestroyed;
+		private boolean isSurfaceDestroyed;
 
 		private final Paint backgroundPaint;
 
@@ -63,8 +67,8 @@ public class GameLayout extends SurfaceView implements
 					Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		}
 
-		public void destroy() {
-			isDestroyed = true;
+		public void onSurfaceDestroyed() {
+			isSurfaceDestroyed = true;
 		}
 
 		@Override
@@ -72,14 +76,23 @@ public class GameLayout extends SurfaceView implements
 			final SurfaceHolder holder = getHolder();
 			Canvas canvas = null;
 
-			while (!isDestroyed && (canvas = holder.lockCanvas()) != null) {
+			while (!isSurfaceDestroyed
+					&& (canvas = holder.lockCanvas()) != null) {
+
 				canvas.drawRect(0, 0, screenSize.x, screenSize.y,
 						backgroundPaint);
-				padView.draw(canvas);
-				ballView.draw(canvas);
-				borderView.draw(canvas);
-				resultsView.draw(canvas);
+
+				if (isGameFinished) {
+					finishedGameView.draw(canvas);
+				} else {
+					padView.draw(canvas);
+					ballView.draw(canvas);
+					borderView.draw(canvas);
+					resultsView.draw(canvas);
+				}
+
 				holder.unlockCanvasAndPost(canvas);
+
 			}
 		}
 	}
@@ -108,7 +121,7 @@ public class GameLayout extends SurfaceView implements
 
 		@Override
 		public void surfaceDestroyed(SurfaceHolder holder) {
-			layoutRunnable.destroy();
+			layoutRunnable.onSurfaceDestroyed();
 			executorService.shutdown();
 		}
 
@@ -125,11 +138,12 @@ public class GameLayout extends SurfaceView implements
 		ballView = new BallView(context, attrs, defStyle);
 		borderView = new BorderView(context, attrs, defStyle);
 		resultsView = new ResultsView(context, attrs, defStyle);
+		finishedGameView = new FinishedGameView(context, attrs, defStyle);
 
 		padView.setOnPositionChangedListener(this);
 
 		ballView.setOnPositionChangedListener(this);
-		ballView.setOnGameFinishListener(this);
+		ballView.setOnGameEventsListener(this);
 
 		final SurfaceHolder holder = getHolder();
 		holder.addCallback(new HolderCallback());
@@ -144,6 +158,10 @@ public class GameLayout extends SurfaceView implements
 
 	public GameLayout(Context context) {
 		this(context, null);
+	}
+
+	public void setOnGameEventsListener(final OnGameEventsListener listener) {
+		this.gameEventsListener = listener;
 	}
 
 	@Override
@@ -164,23 +182,19 @@ public class GameLayout extends SurfaceView implements
 		}
 	}
 
-	private boolean hasCollision() {
-		return padViewRect.left < ballViewRect.right
-				&& padViewRect.right > ballViewRect.left
-				&& padViewRect.top < ballViewRect.bottom;
-	}
-
-	public void setOnGameFinishListener(final OnGameEventsListener listener) {
-		this.gameEventsListener = listener;
-	}
-
 	@Override
 	public void onGameEnd() {
-		gameEventsListener.onGameEnd();
+		isGameFinished = true;
 	}
 
 	@Override
 	public void onGameScoreChanged() {
 		resultsView.updateResult();
+	}
+
+	private boolean hasCollision() {
+		return padViewRect.left < ballViewRect.right
+				&& padViewRect.right > ballViewRect.left
+				&& padViewRect.top < ballViewRect.bottom;
 	}
 }

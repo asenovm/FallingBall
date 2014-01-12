@@ -215,7 +215,7 @@ public class BallView extends View {
 		positionChangedListener.onPositionChanged(GameItem.BALL, boundingRect);
 	}
 
-	public void setOnGameFinishListener(final OnGameEventsListener listener) {
+	public void setOnGameEventsListener(final OnGameEventsListener listener) {
 		this.gameEventsListener = listener;
 	}
 

@@ -12,7 +12,7 @@ public class GameActivity extends Activity implements OnGameEventsListener {
 		super.onCreate(savedInstanceState);
 
 		final GameLayout gameLayout = new GameLayout(this);
-		gameLayout.setOnGameFinishListener(this);
+		gameLayout.setOnGameEventsListener(this);
 		setContentView(gameLayout);
 	}
 

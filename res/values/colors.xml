@@ -2,4 +2,5 @@
 
     <color name="dark_grey">#babaab</color>
     <color name="dark_blue">#0099cc</color>
+    <color name="transparent_black">#44000000</color>
 </resources>

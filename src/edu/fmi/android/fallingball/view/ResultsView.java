@@ -55,12 +55,12 @@ public class ResultsView extends View {
 		canvas.drawText(getScoreText(), RESULTS_X, RESULTS_Y, resultsPaint);
 	}
 
-	private String getScoreText() {
-		return TEXT_SCORE + Integer.toString(result);
-	}
-
 	public void updateResult() {
 		++result;
+	}
+
+	private String getScoreText() {
+		return TEXT_SCORE + Integer.toString(result);
 	}
 
 }
