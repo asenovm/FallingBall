@@ -1,4 +1,4 @@
-package edu.fmi.android.gyroship.listeners;
+package edu.fmi.android.fallingball.listeners;
 
 public interface OnGameEventsListener {
 

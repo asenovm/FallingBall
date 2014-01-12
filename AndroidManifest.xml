@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="edu.fmi.android.gyroship.SplashActivity"
+            android:name="edu.fmi.android.fallingball.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape"
@@ -26,14 +26,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.fmi.android.gyroship.HomeActivity"
+            android:name="edu.fmi.android.fallingball.HomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape"
             android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
         </activity>
         <activity
-            android:name="edu.fmi.android.gyroship.GameActivity"
+            android:name="edu.fmi.android.fallingball.GameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape"

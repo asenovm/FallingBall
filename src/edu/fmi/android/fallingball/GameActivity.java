@@ -1,9 +1,9 @@
-package edu.fmi.android.gyroship;
+package edu.fmi.android.fallingball;
 
 import android.app.Activity;
 import android.os.Bundle;
-import edu.fmi.android.gyroship.listeners.OnGameEventsListener;
-import edu.fmi.android.gyroship.view.GameLayout;
+import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
+import edu.fmi.android.fallingball.view.GameLayout;
 
 public class GameActivity extends Activity implements OnGameEventsListener {
 
