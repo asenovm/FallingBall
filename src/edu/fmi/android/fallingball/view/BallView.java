@@ -7,13 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
 import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
 import edu.fmi.android.fallingball.view.GameLayout.GameItem;
+import edu.fmi.fallingball.utils.ScreenUtil;
 
 public class BallView extends View {
 
@@ -32,16 +30,34 @@ public class BallView extends View {
 	 */
 	private static final int ORIENTATION_X_PAD = 0;
 
+	/**
+	 * {@value}
+	 */
 	private static final int ORIENTATION_Y_BORDER_TOP = 1;
 
+	/**
+	 * {@value}
+	 */
 	private static final int ORIENTATION_X_BORDER_TOP = 0;
 
+	/**
+	 * {@value}
+	 */
 	private static final int ORIENTATION_Y_BORDER_LEFT = 0;
 
+	/**
+	 * {@value}
+	 */
 	private static final int ORIENTATION_X_BORDER_LEFT = 1;
 
+	/**
+	 * {@value}
+	 */
 	private static final int ORIENTATION_Y_BORDER_RIGHT = 0;
 
+	/**
+	 * {@value}
+	 */
 	private static final int ORIENTATION_X_BORDER_RIGHT = -1;
 
 	/**
@@ -125,12 +141,7 @@ public class BallView extends View {
 		ballPaint = new Paint();
 		ballPaint.setColor(Color.WHITE);
 
-		final WindowManager windowManager = (WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE);
-		final Display display = windowManager.getDefaultDisplay();
-
-		screenSize = new Point();
-		display.getSize(screenSize);
+		screenSize = ScreenUtil.getScreenSize(context);
 
 		positionX = screenSize.x / 2;
 		positionY = RADIUS_BALL;
@@ -168,6 +179,7 @@ public class BallView extends View {
 
 		if (positionY < RADIUS_BALL) {
 			computeSpeedVector(topBorderVector);
+			gameEventsListener.onGameScoreChanged();
 		}
 
 		canvas.drawCircle(positionX, positionY, RADIUS_BALL, ballPaint);
@@ -191,8 +203,6 @@ public class BallView extends View {
 	private void computeSpeedVector(final Vector collisionVector) {
 		speedVector = speedVector.substract(collisionVector.multiply(2)
 				.multiply(speedVector.dotProduct(collisionVector)));
-
-		Log.i(TAG, "speed vector is " + speedVector.toString());
 	}
 
 	private void move(final Vector speedVector) {

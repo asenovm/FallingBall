@@ -21,4 +21,9 @@ public class GameActivity extends Activity implements OnGameEventsListener {
 		finish();
 	}
 
+	@Override
+	public void onGameScoreChanged() {
+		// blank
+	}
+
 }

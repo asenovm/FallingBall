@@ -4,14 +4,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
 import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
+import edu.fmi.android.gyroship.R;
+import edu.fmi.fallingball.utils.ScreenUtil;
 
 public class GameLayout extends SurfaceView implements
 		OnPositionChangedListener, OnGameEventsListener {
@@ -26,6 +32,10 @@ public class GameLayout extends SurfaceView implements
 
 	private final BallView ballView;
 
+	private final BorderView borderView;
+
+	private final ResultsView resultsView;
+
 	private RectF padViewRect;
 
 	private RectF ballViewRect;
@@ -35,6 +45,23 @@ public class GameLayout extends SurfaceView implements
 	private class LayoutRunnable implements Runnable {
 
 		private boolean isDestroyed;
+
+		private final Paint backgroundPaint;
+
+		private final Point screenSize;
+
+		public LayoutRunnable() {
+			backgroundPaint = new Paint();
+			backgroundPaint.setShader(getBackgroundShader());
+
+			screenSize = ScreenUtil.getScreenSize(getContext());
+		}
+
+		private BitmapShader getBackgroundShader() {
+			return new BitmapShader(BitmapFactory.decodeResource(
+					getResources(), R.drawable.activity_background_image),
+					Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		}
 
 		public void destroy() {
 			isDestroyed = true;
@@ -46,9 +73,12 @@ public class GameLayout extends SurfaceView implements
 			Canvas canvas = null;
 
 			while (!isDestroyed && (canvas = holder.lockCanvas()) != null) {
-				canvas.drawColor(Color.BLACK);
+				canvas.drawRect(0, 0, screenSize.x, screenSize.y,
+						backgroundPaint);
 				padView.draw(canvas);
 				ballView.draw(canvas);
+				borderView.draw(canvas);
+				resultsView.draw(canvas);
 				holder.unlockCanvasAndPost(canvas);
 			}
 		}
@@ -93,6 +123,8 @@ public class GameLayout extends SurfaceView implements
 
 		padView = new PadView(context, attrs, defStyle);
 		ballView = new BallView(context, attrs, defStyle);
+		borderView = new BorderView(context, attrs, defStyle);
+		resultsView = new ResultsView(context, attrs, defStyle);
 
 		padView.setOnPositionChangedListener(this);
 
@@ -145,5 +177,10 @@ public class GameLayout extends SurfaceView implements
 	@Override
 	public void onGameEnd() {
 		gameEventsListener.onGameEnd();
+	}
+
+	@Override
+	public void onGameScoreChanged() {
+		resultsView.updateResult();
 	}
 }
