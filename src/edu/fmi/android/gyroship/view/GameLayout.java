@@ -11,9 +11,10 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import edu.fmi.android.gyroship.OnPositionChangedListener;
+import edu.fmi.android.gyroship.listeners.OnGameEventsListener;
 
 public class GameLayout extends SurfaceView implements
-		OnPositionChangedListener {
+		OnPositionChangedListener, OnGameEventsListener {
 
 	/**
 	 * {@value}
@@ -28,6 +29,8 @@ public class GameLayout extends SurfaceView implements
 	private RectF padViewRect;
 
 	private RectF ballViewRect;
+
+	private OnGameEventsListener gameEventsListener;
 
 	private class LayoutRunnable implements Runnable {
 
@@ -92,7 +95,9 @@ public class GameLayout extends SurfaceView implements
 		ballView = new BallView(context, attrs, defStyle);
 
 		padView.setOnPositionChangedListener(this);
+
 		ballView.setOnPositionChangedListener(this);
+		ballView.setOnGameFinishListener(this);
 
 		final SurfaceHolder holder = getHolder();
 		holder.addCallback(new HolderCallback());
@@ -131,5 +136,14 @@ public class GameLayout extends SurfaceView implements
 		return padViewRect.left < ballViewRect.right
 				&& padViewRect.right > ballViewRect.left
 				&& padViewRect.top < ballViewRect.bottom;
+	}
+
+	public void setOnGameFinishListener(final OnGameEventsListener listener) {
+		this.gameEventsListener = listener;
+	}
+
+	@Override
+	public void onGameEnd() {
+		gameEventsListener.onGameEnd();
 	}
 }

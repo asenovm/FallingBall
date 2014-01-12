@@ -7,10 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import edu.fmi.android.gyroship.OnPositionChangedListener;
+import edu.fmi.android.gyroship.listeners.OnGameEventsListener;
 import edu.fmi.android.gyroship.view.GameLayout.GameItem;
 
 public class BallView extends View {
@@ -77,7 +79,9 @@ public class BallView extends View {
 
 	private Vector speedVector;
 
-	private OnPositionChangedListener listener;
+	private OnPositionChangedListener positionChangedListener;
+
+	private OnGameEventsListener gameEventsListener;
 
 	public static class Vector {
 		private float x;
@@ -169,11 +173,14 @@ public class BallView extends View {
 		canvas.drawCircle(positionX, positionY, RADIUS_BALL, ballPaint);
 
 		move(speedVector);
+		if (positionY >= screenSize.y - RADIUS_BALL) {
+			gameEventsListener.onGameEnd();
+		}
 	}
 
 	public void setOnPositionChangedListener(
 			final OnPositionChangedListener listener) {
-		this.listener = listener;
+		this.positionChangedListener = listener;
 	}
 
 	public void onCollisionDetected() {
@@ -184,6 +191,8 @@ public class BallView extends View {
 	private void computeSpeedVector(final Vector collisionVector) {
 		speedVector = speedVector.substract(collisionVector.multiply(2)
 				.multiply(speedVector.dotProduct(collisionVector)));
+
+		Log.i(TAG, "speed vector is " + speedVector.toString());
 	}
 
 	private void move(final Vector speedVector) {
@@ -193,7 +202,11 @@ public class BallView extends View {
 		boundingRect.set(positionX - RADIUS_BALL, positionY - RADIUS_BALL,
 				positionX + RADIUS_BALL, positionY + RADIUS_BALL);
 
-		listener.onPositionChanged(GameItem.BALL, boundingRect);
+		positionChangedListener.onPositionChanged(GameItem.BALL, boundingRect);
+	}
+
+	public void setOnGameFinishListener(final OnGameEventsListener listener) {
+		this.gameEventsListener = listener;
 	}
 
 }
