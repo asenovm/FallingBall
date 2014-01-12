@@ -1,4 +1,4 @@
-GyroShip
+Pong Game
 ========
 
-An Android game letting you fly in the space and combat enemies using the gyroscope and accelerometer of your android phone/tablet
+An Android game in which you need to hit a falling ball to prevent it from falling below your paddle (ping-pong style).
