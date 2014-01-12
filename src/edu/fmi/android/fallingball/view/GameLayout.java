@@ -10,8 +10,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import edu.fmi.android.fallingball.OnPositionChangedListener;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
+import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
 
 public class GameLayout extends SurfaceView implements
 		OnPositionChangedListener, OnGameEventsListener {

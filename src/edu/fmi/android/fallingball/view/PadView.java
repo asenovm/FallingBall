@@ -15,7 +15,7 @@ import android.view.Display;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
-import edu.fmi.android.fallingball.OnPositionChangedListener;
+import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
 import edu.fmi.android.fallingball.view.GameLayout.GameItem;
 
 public class PadView extends View implements SensorEventListener {
@@ -28,7 +28,12 @@ public class PadView extends View implements SensorEventListener {
 	/**
 	 * {@value}
 	 */
-	private static final int HEIGHT_LINE = 20;
+	private static final int PADDLE_HEIGHT = 10;
+
+	/**
+	 * {@value}
+	 */
+	private static final float PADDLE_WIDTH = 0.015f;
 
 	/**
 	 * {@value}
@@ -39,11 +44,6 @@ public class PadView extends View implements SensorEventListener {
 	 * {@value}
 	 */
 	private static final float METRES_IN_INCH = 0.0254f;
-
-	/**
-	 * {@value}
-	 */
-	private static final float LENGTH_LINE = 0.015f;
 
 	private float positionX;
 
@@ -143,8 +143,8 @@ public class PadView extends View implements SensorEventListener {
 		}
 
 		final float x = startX + positionX * metersToPixelsX;
-		boundingRect.set(Math.max(0, x), verticalBound - HEIGHT_LINE,
-				Math.round(x + LENGTH_LINE * metersToPixelsX), verticalBound);
+		boundingRect.set(Math.max(0, x), verticalBound - PADDLE_HEIGHT,
+				Math.round(x + PADDLE_WIDTH * metersToPixelsX), verticalBound);
 		canvas.drawRect(boundingRect, shipPaint);
 		listener.onPositionChanged(GameItem.PAD, boundingRect);
 
@@ -186,8 +186,8 @@ public class PadView extends View implements SensorEventListener {
 	}
 
 	public void setDimensions(final int width, final int height) {
-		startX = Math.round(width - LENGTH_LINE * metersToPixelsX) * 0.5f;
-		horizontalBound = (width / metersToPixelsX - LENGTH_LINE) * 0.5f;
+		startX = Math.round(width - PADDLE_WIDTH * metersToPixelsX) * 0.5f;
+		horizontalBound = (width / metersToPixelsX - PADDLE_WIDTH) * 0.5f;
 		verticalBound = height;
 	}
 

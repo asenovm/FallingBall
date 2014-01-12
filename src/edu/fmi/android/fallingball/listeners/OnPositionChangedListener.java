@@ -1,4 +1,4 @@
-package edu.fmi.android.fallingball;
+package edu.fmi.android.fallingball.listeners;
 
 import android.graphics.RectF;
 import edu.fmi.android.fallingball.view.GameLayout.GameItem;

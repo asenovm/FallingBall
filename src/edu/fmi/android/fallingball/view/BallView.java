@@ -11,8 +11,8 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
-import edu.fmi.android.fallingball.OnPositionChangedListener;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
+import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
 import edu.fmi.android.fallingball.view.GameLayout.GameItem;
 
 public class BallView extends View {
