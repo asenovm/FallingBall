@@ -2,11 +2,11 @@ package edu.fmi.android.fallingball.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+import edu.fmi.android.gyroship.R;
 
 public class CellView extends View {
 
@@ -16,9 +16,11 @@ public class CellView extends View {
 	@SuppressWarnings("unused")
 	private static final String TAG = CellView.class.getSimpleName();
 
-	private static final int CELL_WIDTH = 60;
+	private static final int WIDTH_CELL = 60;
 
-	private static final int CELL_HEIGHT = 20;
+	private static final int WIDTH_BORDER = 2;
+
+	private static final int HEIGHT_CELL = 20;
 
 	private final Paint cellPaint;
 
@@ -32,8 +34,7 @@ public class CellView extends View {
 		super(context, attrs, defStyleAttr);
 
 		cellPaint = new Paint();
-		cellPaint.setColor(Color.GRAY);
-		cellPaint.setStrokeWidth(2);
+		cellPaint.setStrokeWidth(WIDTH_BORDER);
 
 		boundingRect = new RectF();
 	}
@@ -46,44 +47,44 @@ public class CellView extends View {
 		this(context, null);
 	}
 
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-
-		cellPaint.setStyle(Paint.Style.FILL);
-		cellPaint.setColor(Color.GRAY);
-		canvas.drawRect(positionX, positionY, positionX + CELL_WIDTH, positionY
-				+ CELL_HEIGHT, cellPaint);
-
-		cellPaint.setStyle(Paint.Style.STROKE);
-		cellPaint.setColor(Color.BLACK);
-		canvas.drawRect(positionX, positionY, positionX + CELL_WIDTH, positionY
-				+ CELL_HEIGHT, cellPaint);
-	}
-
 	public void setX(final float positionX) {
 		this.positionX = positionX;
 		boundingRect.left = positionX;
-		boundingRect.right = positionX + CELL_WIDTH;
+		boundingRect.right = positionX + WIDTH_CELL;
 	}
 
 	public void setY(final float positionY) {
 		this.positionY = positionY;
 		boundingRect.top = positionY;
-		boundingRect.bottom = positionY + CELL_HEIGHT;
+		boundingRect.bottom = positionY + HEIGHT_CELL;
 	}
 
-	@Override
-	public String toString() {
-		return positionX + " " + positionY;
-	}
-
-	public RectF getRect() {
+	public RectF getBoundingRect() {
 		return boundingRect;
 	}
 
 	public void hide() {
 		setVisibility(View.GONE);
+	}
+
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+
+		cellPaint.setStyle(Paint.Style.FILL);
+		cellPaint.setColor(getResources().getColor(R.color.grey));
+		canvas.drawRect(positionX, positionY, positionX + WIDTH_CELL, positionY
+				+ HEIGHT_CELL, cellPaint);
+
+		cellPaint.setStyle(Paint.Style.STROKE);
+		cellPaint.setColor(getResources().getColor(R.color.light_grey));
+		canvas.drawRect(positionX, positionY, positionX + WIDTH_CELL, positionY
+				+ HEIGHT_CELL, cellPaint);
+	}
+
+	@Override
+	public String toString() {
+		return positionX + " " + positionY;
 	}
 
 }

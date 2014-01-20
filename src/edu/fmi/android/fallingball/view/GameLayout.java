@@ -11,7 +11,6 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
@@ -249,26 +248,26 @@ public class GameLayout extends SurfaceView implements
 		}
 
 		if (hasCollision(padViewRect, ballViewRect)) {
-			ballView.onCollisionDetected(new Vector(0, -1));
+			ballView.onCollisionDetected(new Vector(0, -1), false);
 		}
 
 		if (item == GameItem.BALL) {
 			for (final CellView cell : cells) {
-				final RectF cellRect = cell.getRect();
+				final RectF cellRect = cell.getBoundingRect();
 
 				if (ballViewRect.bottom > cellRect.top
 						&& ballViewRect.bottom < cellRect.bottom
 						&& ballViewRect.right > cellRect.left
 						&& ballViewRect.left < cellRect.right) {
 					cells.remove(cell);
-					ballView.onCollisionDetected(new Vector(0, -1));
+					ballView.onCollisionDetected(new Vector(0, -1), true);
 					return;
 				} else if (ballViewRect.bottom > cellRect.bottom
 						&& ballViewRect.top < cellRect.bottom
 						&& ballViewRect.left < cellRect.right
 						&& ballViewRect.right > cellRect.left) {
 					cells.remove(cell);
-					ballView.onCollisionDetected(new Vector(0, 1));
+					ballView.onCollisionDetected(new Vector(0, 1), true);
 					return;
 				}
 			}

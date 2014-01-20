@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import edu.fmi.android.fallingball.GameItem;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
@@ -20,16 +19,6 @@ public class BallView extends View {
 	 * {@value}
 	 */
 	public static final String TAG = BallView.class.getSimpleName();
-
-	/**
-	 * {@value}
-	 */
-	private static final int ORIENTATION_Y_PAD = -1;
-
-	/**
-	 * {@value}
-	 */
-	private static final int ORIENTATION_X_PAD = 0;
 
 	/**
 	 * {@value}
@@ -81,8 +70,6 @@ public class BallView extends View {
 	private final RectF boundingRect;
 
 	private final Point screenSize;
-
-	private final Vector padVector;
 
 	private final Vector topBorderVector;
 
@@ -149,7 +136,6 @@ public class BallView extends View {
 		positionY = RADIUS_BALL;
 
 		speedVector = new Vector(VELOCITY_X_INITIAL, VELOCITY_Y_INITIAL);
-		padVector = new Vector(ORIENTATION_X_PAD, ORIENTATION_Y_PAD);
 		leftBorderVector = new Vector(ORIENTATION_X_BORDER_LEFT,
 				ORIENTATION_Y_BORDER_LEFT);
 		topBorderVector = new Vector(ORIENTATION_X_BORDER_TOP,
@@ -181,7 +167,6 @@ public class BallView extends View {
 
 		if (positionY < RADIUS_BALL) {
 			computeSpeedVector(topBorderVector);
-			gameEventsListener.onGameScoreChanged();
 		}
 
 		canvas.drawCircle(positionX, positionY, RADIUS_BALL, ballPaint);
@@ -197,9 +182,12 @@ public class BallView extends View {
 		this.positionChangedListener = listener;
 	}
 
-	public void onCollisionDetected(Vector vector) {
+	public void onCollisionDetected(Vector vector, final boolean isCell) {
 		computeSpeedVector(vector);
 		move(speedVector);
+		if (isCell) {
+			gameEventsListener.onGameScoreChanged();
+		}
 	}
 
 	private void computeSpeedVector(final Vector collisionVector) {
