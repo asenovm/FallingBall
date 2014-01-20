@@ -1,5 +1,7 @@
 package edu.fmi.android.fallingball.view;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -9,6 +11,7 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
@@ -39,6 +42,8 @@ public class GameLayout extends SurfaceView implements
 	private final ResultsView resultsView;
 
 	private final FinishedGameView finishedGameView;
+
+	private final List<CellView> cells;
 
 	private RectF padViewRect;
 
@@ -104,6 +109,9 @@ public class GameLayout extends SurfaceView implements
 					ballView.draw(canvas);
 					borderView.draw(canvas);
 					resultsView.draw(canvas);
+					for (final CellView cell : cells) {
+						cell.draw(canvas);
+					}
 				}
 
 				holder.unlockCanvasAndPost(canvas);
@@ -185,8 +193,30 @@ public class GameLayout extends SurfaceView implements
 		final SurfaceHolder holder = getHolder();
 		holder.addCallback(new HolderCallback());
 
+		final Point screenSize = ScreenUtil.getScreenSize(context);
+
 		padViewRect = new RectF();
 		ballViewRect = new RectF();
+
+		cells = new LinkedList<CellView>();
+		int currentX = 50;
+		int currentY = 100;
+		int iter = 0;
+
+		while (currentY < screenSize.y - 60) {
+			while (currentX < screenSize.x - 50 - iter * 60) {
+				final CellView cell = new CellView(context);
+				cell.setX(currentX);
+				cell.setY(currentY);
+				cells.add(cell);
+
+				currentX += 60;
+			}
+
+			++iter;
+			currentY += 20;
+			currentX = 50 + iter * 60;
+		}
 
 		setOnClickListener(new GameLayoutOnClickListener());
 	}
@@ -216,8 +246,16 @@ public class GameLayout extends SurfaceView implements
 			padViewRect = position;
 		}
 
-		if (hasCollision()) {
+		if (hasCollision(padViewRect, ballViewRect)) {
 			ballView.onCollisionDetected();
+		}
+
+		for (final CellView cell : cells) {
+			if (hasCollision(cell.getRect(), ballViewRect)) {
+				cells.remove(cell);
+				cell.hide();
+				return;
+			}
 		}
 	}
 
@@ -231,9 +269,10 @@ public class GameLayout extends SurfaceView implements
 		resultsView.updateResult();
 	}
 
-	private boolean hasCollision() {
-		return padViewRect.top < ballViewRect.bottom
-				&& padViewRect.left < ballViewRect.right
-				&& padViewRect.right > ballViewRect.left;
+	private boolean hasCollision(final RectF containerRect,
+			final RectF collisionRect) {
+		return containerRect.top < collisionRect.bottom
+				&& containerRect.left < collisionRect.right
+				&& containerRect.right > collisionRect.left;
 	}
 }
