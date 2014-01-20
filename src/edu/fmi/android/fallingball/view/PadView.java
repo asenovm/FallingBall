@@ -15,8 +15,8 @@ import android.view.Display;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
+import edu.fmi.android.fallingball.GameItem;
 import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
-import edu.fmi.android.fallingball.view.GameLayout.GameItem;
 
 public class PadView extends View implements SensorEventListener {
 

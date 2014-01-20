@@ -18,8 +18,19 @@ public class FinishedGameView extends RelativeLayout {
 	@SuppressWarnings("unused")
 	private static final String TAG = FinishedGameView.class.getSimpleName();
 
+	/**
+	 * {@value}
+	 */
+	private static final int TEXT_SIZE = 30;
+
+	/**
+	 * {@value}
+	 */
 	private static final String TEXT_GAME_OVER = "Game Over.";
 
+	/**
+	 * {@value}
+	 */
 	private static final String TEXT_TAP_TO_CONTINUE = "Tap anywhere to continue.";
 
 	private final float gameOverTextX;
@@ -38,7 +49,7 @@ public class FinishedGameView extends RelativeLayout {
 
 		textPaint = new Paint();
 		textPaint.setColor(Color.WHITE);
-		textPaint.setTextSize(30);
+		textPaint.setTextSize(TEXT_SIZE);
 
 		final Point screenSize = ScreenUtil.getScreenSize(context);
 

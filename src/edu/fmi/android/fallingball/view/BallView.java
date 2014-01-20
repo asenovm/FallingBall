@@ -8,9 +8,9 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+import edu.fmi.android.fallingball.GameItem;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
 import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
-import edu.fmi.android.fallingball.view.GameLayout.GameItem;
 import edu.fmi.fallingball.utils.ScreenUtil;
 
 public class BallView extends View {
@@ -63,12 +63,12 @@ public class BallView extends View {
 	/**
 	 * {@value}
 	 */
-	private static final float VELOCITY_Y_INITIAL = 6f;
+	private static final float VELOCITY_Y_INITIAL = 5f;
 
 	/**
 	 * {@value}
 	 */
-	private static final float VELOCITY_X_INITIAL = 1f;
+	private static final float VELOCITY_X_INITIAL = 0.5f;
 
 	/**
 	 * {@value}
