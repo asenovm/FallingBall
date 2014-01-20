@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import edu.fmi.android.fallingball.GameItem;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
@@ -68,7 +69,7 @@ public class BallView extends View {
 	/**
 	 * {@value}
 	 */
-	private static final float VELOCITY_X_INITIAL = 0.5f;
+	private static final float VELOCITY_X_INITIAL = 0.2f;
 
 	/**
 	 * {@value}
@@ -196,8 +197,8 @@ public class BallView extends View {
 		this.positionChangedListener = listener;
 	}
 
-	public void onCollisionDetected() {
-		computeSpeedVector(padVector);
+	public void onCollisionDetected(Vector vector) {
+		computeSpeedVector(vector);
 		move(speedVector);
 	}
 
