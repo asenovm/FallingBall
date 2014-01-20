@@ -63,12 +63,12 @@ public class BallView extends View {
 	/**
 	 * {@value}
 	 */
-	private static final float VELOCITY_Y_INITIAL = 4f;
+	private static final float VELOCITY_Y_INITIAL = 6f;
 
 	/**
 	 * {@value}
 	 */
-	private static final float VELOCITY_X_INITIAL = 0.5f;
+	private static final float VELOCITY_X_INITIAL = 1f;
 
 	/**
 	 * {@value}
@@ -139,6 +139,7 @@ public class BallView extends View {
 		super(context, attrs, defStyleAttr);
 
 		ballPaint = new Paint();
+		ballPaint.setDither(false);
 		ballPaint.setColor(Color.WHITE);
 
 		screenSize = ScreenUtil.getScreenSize(context);
@@ -183,8 +184,8 @@ public class BallView extends View {
 		}
 
 		canvas.drawCircle(positionX, positionY, RADIUS_BALL, ballPaint);
-
 		move(speedVector);
+
 		if (positionY >= screenSize.y - RADIUS_BALL) {
 			gameEventsListener.onGameEnd();
 		}

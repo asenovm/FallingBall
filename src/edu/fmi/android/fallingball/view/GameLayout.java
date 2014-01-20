@@ -12,8 +12,10 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
 import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
 import edu.fmi.android.gyroship.R;
@@ -25,7 +27,6 @@ public class GameLayout extends SurfaceView implements
 	/**
 	 * {@value}
 	 */
-	@SuppressWarnings("unused")
 	private static final String TAG = GameLayout.class.getSimpleName();
 
 	private final PadView padView;
@@ -48,6 +49,16 @@ public class GameLayout extends SurfaceView implements
 
 	private class LayoutRunnable implements Runnable {
 
+		/**
+		 * {@value}
+		 */
+		private static final int GAME_FPS = 45;
+
+		/**
+		 * {@value}
+		 */
+		private static final int TIME_FRAME = 1000 / GAME_FPS;
+
 		private boolean isSurfaceDestroyed;
 
 		private final Paint backgroundPaint;
@@ -57,6 +68,8 @@ public class GameLayout extends SurfaceView implements
 		public LayoutRunnable() {
 			backgroundPaint = new Paint();
 			backgroundPaint.setShader(getBackgroundShader());
+			backgroundPaint.setDither(false);
+			backgroundPaint.setFilterBitmap(false);
 
 			screenSize = ScreenUtil.getScreenSize(getContext());
 		}
@@ -79,6 +92,7 @@ public class GameLayout extends SurfaceView implements
 			while (!isSurfaceDestroyed
 					&& (canvas = holder.lockCanvas()) != null) {
 
+				final long startTime = System.currentTimeMillis();
 				canvas.drawRect(0, 0, screenSize.x, screenSize.y,
 						backgroundPaint);
 
@@ -92,7 +106,24 @@ public class GameLayout extends SurfaceView implements
 				}
 
 				holder.unlockCanvasAndPost(canvas);
+				renderNextFrame(startTime);
+			}
+		}
 
+		private void renderNextFrame(final long startTime) {
+			long sleepTime = TIME_FRAME
+					- (System.currentTimeMillis() - startTime);
+
+			if (sleepTime > 0) {
+				try {
+					Thread.sleep(sleepTime);
+				} catch (InterruptedException e) {
+					Log.e(TAG, e.getMessage(), e);
+				}
+			} else {
+				while (sleepTime < 0) {
+					sleepTime += TIME_FRAME;
+				}
 			}
 		}
 	}
@@ -127,6 +158,15 @@ public class GameLayout extends SurfaceView implements
 
 	}
 
+	private class GameLayoutOnClickListener implements OnClickListener {
+		@Override
+		public void onClick(View v) {
+			if (isGameFinished) {
+				gameEventsListener.onGameEnd();
+			}
+		}
+	}
+
 	public enum GameItem {
 		PAD, BALL;
 	}
@@ -150,6 +190,8 @@ public class GameLayout extends SurfaceView implements
 
 		padViewRect = new RectF();
 		ballViewRect = new RectF();
+
+		setOnClickListener(new GameLayoutOnClickListener());
 	}
 
 	public GameLayout(Context context, AttributeSet attrs) {
@@ -193,8 +235,8 @@ public class GameLayout extends SurfaceView implements
 	}
 
 	private boolean hasCollision() {
-		return padViewRect.left < ballViewRect.right
-				&& padViewRect.right > ballViewRect.left
-				&& padViewRect.top < ballViewRect.bottom;
+		return padViewRect.top < ballViewRect.bottom
+				&& padViewRect.left < ballViewRect.right
+				&& padViewRect.right > ballViewRect.left;
 	}
 }

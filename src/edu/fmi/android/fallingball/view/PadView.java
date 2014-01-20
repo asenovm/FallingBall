@@ -147,8 +147,6 @@ public class PadView extends View implements SensorEventListener {
 				Math.round(x + PADDLE_WIDTH * metersToPixelsX), verticalBound);
 		canvas.drawRect(boundingRect, shipPaint);
 		listener.onPositionChanged(GameItem.PAD, boundingRect);
-
-		invalidate();
 	}
 
 	@Override
