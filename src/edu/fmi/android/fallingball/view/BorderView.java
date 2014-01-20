@@ -24,7 +24,7 @@ public class BorderView extends View {
 		super(context, attrs, defStyleAttr);
 
 		borderPaint = new Paint();
-		borderPaint.setColor(getResources().getColor(R.color.dark_blue));
+		borderPaint.setColor(getResources().getColor(R.color.light_grey_1));
 		borderPaint.setStrokeWidth(WIDTH_BORDER);
 
 		screenSize = ScreenUtil.getScreenSize(context);
