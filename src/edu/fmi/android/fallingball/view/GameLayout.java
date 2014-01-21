@@ -125,11 +125,11 @@ public class GameLayout extends SurfaceView implements
 				}
 
 				holder.unlockCanvasAndPost(canvas);
-				renderNextFrame(startTime);
+				awaitNextFrame(startTime);
 			}
 		}
 
-		private void renderNextFrame(final long startTime) {
+		private void awaitNextFrame(final long startTime) {
 			long sleepTime = TIME_FRAME
 					- (System.currentTimeMillis() - startTime);
 

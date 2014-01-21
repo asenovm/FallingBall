@@ -56,11 +56,11 @@ public class FinishedGameView extends RelativeLayout {
 		final float gameOverTextWidth = textPaint.measureText(TEXT_GAME_OVER);
 		gameOverTextX = (screenSize.x - gameOverTextWidth) / 2;
 		gameOverTextY = (screenSize.y - textPaint.ascent() - textPaint
-				.descent()) / 2 - 35;
+				.descent() - TEXT_SIZE) / 2;
 
 		final float tapTextWidth = textPaint.measureText(TEXT_TAP_TO_CONTINUE);
 		tapTextX = (screenSize.x - tapTextWidth) / 2;
-		tapTextY = (screenSize.y - textPaint.ascent() - textPaint.descent()) / 2 + 5;
+		tapTextY = (screenSize.y - textPaint.ascent() - textPaint.descent() + TEXT_SIZE) / 2;
 	}
 
 	public FinishedGameView(Context context, AttributeSet attrs) {
