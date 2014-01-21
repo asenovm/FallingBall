@@ -1,7 +1,6 @@
 package edu.fmi.android.fallingball.view;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +23,6 @@ import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
 import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
 import edu.fmi.android.gyroship.R;
 import edu.fmi.fallingball.utils.ScreenUtil;
-import edu.fmi.fallingball.utils.Vector;
 
 public class GameLayout extends SurfaceView implements
 		OnPositionChangedListener, OnGameEventsListener {
@@ -51,8 +49,6 @@ public class GameLayout extends SurfaceView implements
 	private final Set<CellView> cells;
 
 	private RectF padViewRect;
-
-	private RectF ballViewRect;
 
 	private OnGameEventsListener gameEventsListener;
 
@@ -205,7 +201,6 @@ public class GameLayout extends SurfaceView implements
 		holder.addCallback(new HolderCallback());
 
 		padViewRect = new RectF();
-		ballViewRect = new RectF();
 
 		cells = initCells();
 		setOnClickListener(new GameLayoutOnClickListener());
@@ -259,18 +254,12 @@ public class GameLayout extends SurfaceView implements
 	@Override
 	public void onPositionChanged(GameItem item, RectF position) {
 		if (item == GameItem.BALL) {
-			ballViewRect = position;
-			ballView.checkAndHandleCollision(cells);
+			ballView.checkAndHandleCellCollision(cells);
 		} else if (item == GameItem.PAD) {
 			padViewRect = position;
 		}
 
-		if (hasCollision(padViewRect, ballViewRect)) {
-			ballView.onCollisionDetected(
-					new Vector(0, -1),
-					Math.min(1, (ballViewRect.right - padViewRect.left)
-							/ padViewRect.width()), false);
-		}
+		ballView.checkAndHandlePadCollision(padViewRect);
 	}
 
 	@Override
@@ -281,12 +270,5 @@ public class GameLayout extends SurfaceView implements
 	@Override
 	public void onGameScoreChanged() {
 		resultsView.updateResult();
-	}
-
-	private boolean hasCollision(final RectF containerRect,
-			final RectF collisionRect) {
-		return containerRect.top < collisionRect.bottom
-				&& containerRect.left < collisionRect.right
-				&& containerRect.right > collisionRect.left;
 	}
 }

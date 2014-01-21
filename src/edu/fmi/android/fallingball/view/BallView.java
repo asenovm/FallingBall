@@ -175,7 +175,7 @@ public class BallView extends View {
 				positionX + RADIUS_BALL, positionY + RADIUS_BALL);
 	}
 
-	public void checkAndHandleCollision(final Collection<CellView> cells) {
+	public void checkAndHandleCellCollision(final Collection<CellView> cells) {
 		for (final CellView cell : cells) {
 			final RectF cellRect = cell.getBoundingRect();
 			final float collisionRatio = Math.min(1,
@@ -190,6 +190,14 @@ public class BallView extends View {
 				onCollisionDetected(new Vector(0, 1), collisionRatio, true);
 				return;
 			}
+		}
+	}
+
+	public void checkAndHandlePadCollision(final RectF padRect) {
+		if (isCollidingFromAbove(padRect)) {
+			final float collisionRatio = Math.min(1,
+					(boundingRect.right - padRect.left) / padRect.width());
+			onCollisionDetected(new Vector(0, -1), collisionRatio, false);
 		}
 
 	}
