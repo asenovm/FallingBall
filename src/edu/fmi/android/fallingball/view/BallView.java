@@ -81,8 +81,8 @@ public class BallView extends View {
 		rightBorderVector = Vector.from(Direction.RIGHT);
 		speedVector = new Vector(VELOCITY_X_INITIAL, VELOCITY_Y_INITIAL);
 
-		boundingRect = new RectF(positionX - RADIUS_BALL, positionY
-				- RADIUS_BALL, positionX + RADIUS_BALL, positionY + RADIUS_BALL);
+		boundingRect = new RectF();
+		updatePosition(boundingRect);
 	}
 
 	public BallView(Context context, AttributeSet attrs) {
@@ -97,13 +97,11 @@ public class BallView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
-		if (positionX <= RADIUS_BALL) {
+		if (isLeftCollision()) {
 			computeSpeedVector(leftBorderVector);
-		} else if (positionX >= screenSize.x - RADIUS_BALL) {
+		} else if (isRightCollision()) {
 			computeSpeedVector(rightBorderVector);
-		}
-
-		if (positionY < RADIUS_BALL) {
+		} else if (isTopCollision()) {
 			computeSpeedVector(topBorderVector);
 		}
 
@@ -115,13 +113,16 @@ public class BallView extends View {
 		}
 	}
 
-	public void setOnPositionChangedListener(
-			final OnPositionChangedListener listener) {
+	public void setOnPositionChangedListener(OnPositionChangedListener listener) {
 		this.positionChangedListener = listener;
 	}
 
-	public void onCollisionDetected(Vector vector, final float collisionRatio,
-			final boolean isCell) {
+	public void setOnGameEventsListener(OnGameEventsListener listener) {
+		this.gameEventsListener = listener;
+	}
+
+	public void onCollisionDetected(final Vector vector,
+			final float collisionRatio, final boolean isCell) {
 		computeSpeedVector(vector, collisionRatio, isCell);
 		move(speedVector);
 		if (isCell) {
@@ -151,14 +152,24 @@ public class BallView extends View {
 		positionY += speedVector.y;
 		positionX += speedVector.x;
 
-		boundingRect.set(positionX - RADIUS_BALL, positionY - RADIUS_BALL,
-				positionX + RADIUS_BALL, positionY + RADIUS_BALL);
-
+		updatePosition(boundingRect);
 		positionChangedListener.onPositionChanged(GameItem.BALL, boundingRect);
 	}
 
-	public void setOnGameEventsListener(final OnGameEventsListener listener) {
-		this.gameEventsListener = listener;
+	private boolean isRightCollision() {
+		return positionX >= screenSize.x - RADIUS_BALL;
 	}
 
+	private boolean isTopCollision() {
+		return positionY < RADIUS_BALL;
+	}
+
+	private boolean isLeftCollision() {
+		return positionX <= RADIUS_BALL;
+	}
+
+	private void updatePosition(final RectF boundingRect) {
+		boundingRect.set(positionX - RADIUS_BALL, positionY - RADIUS_BALL,
+				positionX + RADIUS_BALL, positionY + RADIUS_BALL);
+	}
 }
