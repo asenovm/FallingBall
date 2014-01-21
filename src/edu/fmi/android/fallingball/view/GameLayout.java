@@ -1,7 +1,8 @@
 package edu.fmi.android.fallingball.view;
 
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,7 +48,7 @@ public class GameLayout extends SurfaceView implements
 
 	private final FinishedGameView finishedGameView;
 
-	private final List<CellView> cells;
+	private final Set<CellView> cells;
 
 	private RectF padViewRect;
 
@@ -210,11 +211,11 @@ public class GameLayout extends SurfaceView implements
 		setOnClickListener(new GameLayoutOnClickListener());
 	}
 
-	private List<CellView> initCells() {
+	private Set<CellView> initCells() {
 		final Context context = getContext();
 		final Point screenSize = ScreenUtil.getScreenSize(context);
 
-		final List<CellView> result = new LinkedList<CellView>();
+		final Set<CellView> result = new HashSet<CellView>();
 
 		int currentX = CELL_START_X;
 		int currentY = CELL_START_Y;
