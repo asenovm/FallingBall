@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="width_ball_activity_splash">50dp</dimen>
+    <dimen name="height_ball_activity_splash">50dp</dimen>
+    <dimen name="width_ball_activity_home">30dp</dimen>
+    <dimen name="height_ball_activity_home">30dp</dimen>
+    <dimen name="width_paddle_activity_splash">120dp</dimen>
+    <dimen name="height_paddle_activity_splash">10dp</dimen>
+    <dimen name="font_size_splash">40sp</dimen>
+
+</resources>

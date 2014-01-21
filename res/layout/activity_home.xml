@@ -5,22 +5,39 @@
     android:background="@drawable/activity_background" >
 
     <ImageView
-        android:id="@+id/home_logo"
+        android:id="@+id/ball"
+        android:layout_width="@dimen/width_ball_activity_home"
+        android:layout_height="@dimen/height_ball_activity_home"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:contentDescription="@string/activity_splash_text"
+        android:src="@drawable/ball" />
+
+    <ImageView
+        android:id="@+id/paddle"
+        android:layout_width="70dp"
+        android:layout_height="5dp"
+        android:layout_below="@id/ball"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/activity_splash_paddle"
+        android:src="@drawable/paddle" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-40dp"
-        android:contentDescription="@string/content_description_logo"
-        android:scaleX="0.6"
-        android:scaleY="0.6"
-        android:src="@drawable/logo" />
+        android:layout_alignLeft="@id/ball"
+        android:layout_alignTop="@id/ball"
+        android:rotation="45"
+        android:text="@string/activity_splash_text"
+        android:textColor="@color/light_grey_1"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/start_game"
         style="@style/theme_home_menu_button"
-        android:layout_below="@id/home_logo"
-        android:layout_marginTop="-25dp"
+        android:layout_below="@id/paddle"
+        android:layout_marginTop="30dp"
         android:onClick="startGame"
         android:text="@string/start_game" />
 

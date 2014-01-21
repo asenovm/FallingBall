@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,13 +6,33 @@
     tools:context=".SplashActivity" >
 
     <ImageView
-        android:id="@+id/splash_logo"
+        android:id="@+id/ball"
+        android:layout_width="@dimen/width_ball_activity_splash"
+        android:layout_height="@dimen/height_ball_activity_splash"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="220dp"
+        android:contentDescription="@string/activity_splash_text"
+        android:src="@drawable/ball" />
+
+    <ImageView
+        android:id="@+id/paddle"
+        android:layout_width="@dimen/width_paddle_activity_splash"
+        android:layout_height="@dimen/height_paddle_activity_splash"
+        android:layout_below="@id/ball"
+        android:layout_marginLeft="185dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/activity_splash_paddle"
+        android:src="@drawable/paddle" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:contentDescription="@string/activity_splash_logo_text"
-        android:scaleX="0.75"
-        android:scaleY="0.75"
-        android:src="@drawable/logo" />
+        android:layout_alignLeft="@id/ball"
+        android:layout_alignTop="@id/ball"
+        android:rotation="45"
+        android:text="@string/activity_splash_text"
+        android:textColor="@color/light_grey_1"
+        android:textSize="@dimen/font_size_splash"
+        android:textStyle="bold" />
 
-</FrameLayout>
+</RelativeLayout>
