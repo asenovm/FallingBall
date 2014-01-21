@@ -16,11 +16,11 @@ public class CellView extends View {
 	@SuppressWarnings("unused")
 	private static final String TAG = CellView.class.getSimpleName();
 
-	private static final int WIDTH_CELL = 60;
+	public static final int WIDTH_CELL = 60;
 
 	private static final int WIDTH_BORDER = 2;
 
-	private static final int HEIGHT_CELL = 20;
+	public static final int HEIGHT_CELL = 20;
 
 	private final Paint cellPaint;
 

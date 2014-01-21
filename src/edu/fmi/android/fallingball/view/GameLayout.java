@@ -28,6 +28,10 @@ import edu.fmi.fallingball.utils.Vector;
 public class GameLayout extends SurfaceView implements
 		OnPositionChangedListener, OnGameEventsListener {
 
+	private static final int CELL_START_Y = 100;
+
+	private static final int CELL_START_X = 50;
+
 	/**
 	 * {@value}
 	 */
@@ -58,12 +62,18 @@ public class GameLayout extends SurfaceView implements
 		/**
 		 * {@value}
 		 */
+		private static final int MILISECONDS_IN_A_SECOND = 1000;
+
+		/**
+		 * {@value}
+		 */
 		private static final int GAME_FPS = 45;
 
 		/**
 		 * {@value}
 		 */
-		private static final int TIME_FRAME = 1000 / GAME_FPS;
+		private static final int TIME_FRAME = MILISECONDS_IN_A_SECOND
+				/ GAME_FPS;
 
 		private boolean isSurfaceDestroyed;
 
@@ -193,33 +203,39 @@ public class GameLayout extends SurfaceView implements
 		final SurfaceHolder holder = getHolder();
 		holder.addCallback(new HolderCallback());
 
-		final Point screenSize = ScreenUtil.getScreenSize(context);
-
 		padViewRect = new RectF();
 		ballViewRect = new RectF();
 
-		cells = new LinkedList<CellView>();
+		cells = initCells();
+		setOnClickListener(new GameLayoutOnClickListener());
+	}
 
-		int currentX = 50;
-		int currentY = 100;
-		int iter = 0;
+	private List<CellView> initCells() {
+		final Context context = getContext();
+		final Point screenSize = ScreenUtil.getScreenSize(context);
 
-		while (currentY < screenSize.y - 60) {
-			while (currentX < screenSize.x - 50 - iter * 60) {
+		final List<CellView> result = new LinkedList<CellView>();
+
+		int currentX = CELL_START_X;
+		int currentY = CELL_START_Y;
+		int cellRows = 0;
+
+		while (currentY < screenSize.y - CELL_START_Y) {
+			while (currentX < screenSize.x - CELL_START_X - cellRows
+					* CellView.WIDTH_CELL) {
 				final CellView cell = new CellView(context);
 				cell.setX(currentX);
 				cell.setY(currentY);
-				cells.add(cell);
+				result.add(cell);
 
-				currentX += 60;
+				currentX += CellView.WIDTH_CELL;
 			}
 
-			++iter;
-			currentY += 20;
-			currentX = 50 + iter * 60;
+			++cellRows;
+			currentY += CellView.HEIGHT_CELL;
+			currentX = CELL_START_X + cellRows * CellView.WIDTH_CELL;
 		}
-
-		setOnClickListener(new GameLayoutOnClickListener());
+		return result;
 	}
 
 	public GameLayout(Context context, AttributeSet attrs) {
