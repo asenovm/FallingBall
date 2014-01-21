@@ -16,19 +16,24 @@ public class CellView extends View {
 	@SuppressWarnings("unused")
 	private static final String TAG = CellView.class.getSimpleName();
 
+	/**
+	 * {@value}
+	 */
 	public static final int WIDTH_CELL = 60;
 
-	private static final int WIDTH_BORDER = 2;
-
+	/**
+	 * {@value}
+	 */
 	public static final int HEIGHT_CELL = 20;
+
+	/**
+	 * {@value}
+	 */
+	private static final int WIDTH_BORDER = 2;
 
 	private final Paint cellPaint;
 
 	private final RectF boundingRect;
-
-	private float positionX;
-
-	private float positionY;
 
 	public CellView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
@@ -48,13 +53,11 @@ public class CellView extends View {
 	}
 
 	public void setX(final float positionX) {
-		this.positionX = positionX;
 		boundingRect.left = positionX;
 		boundingRect.right = positionX + WIDTH_CELL;
 	}
 
 	public void setY(final float positionY) {
-		this.positionY = positionY;
 		boundingRect.top = positionY;
 		boundingRect.bottom = positionY + HEIGHT_CELL;
 	}
@@ -63,28 +66,17 @@ public class CellView extends View {
 		return boundingRect;
 	}
 
-	public void hide() {
-		setVisibility(View.GONE);
-	}
-
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
 		cellPaint.setStyle(Paint.Style.FILL);
 		cellPaint.setColor(getResources().getColor(R.color.grey));
-		canvas.drawRect(positionX, positionY, positionX + WIDTH_CELL, positionY
-				+ HEIGHT_CELL, cellPaint);
+		canvas.drawRect(boundingRect, cellPaint);
 
 		cellPaint.setStyle(Paint.Style.STROKE);
 		cellPaint.setColor(getResources().getColor(R.color.light_grey));
-		canvas.drawRect(positionX, positionY, positionX + WIDTH_CELL, positionY
-				+ HEIGHT_CELL, cellPaint);
-	}
-
-	@Override
-	public String toString() {
-		return positionX + " " + positionY;
+		canvas.drawRect(boundingRect, cellPaint);
 	}
 
 }
