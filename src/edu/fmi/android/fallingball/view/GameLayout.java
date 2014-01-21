@@ -21,9 +21,9 @@ import android.view.View;
 import edu.fmi.android.fallingball.GameItem;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
 import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
-import edu.fmi.android.fallingball.view.BallView.Vector;
 import edu.fmi.android.gyroship.R;
 import edu.fmi.fallingball.utils.ScreenUtil;
+import edu.fmi.fallingball.utils.Vector;
 
 public class GameLayout extends SurfaceView implements
 		OnPositionChangedListener, OnGameEventsListener {
@@ -248,7 +248,10 @@ public class GameLayout extends SurfaceView implements
 		}
 
 		if (hasCollision(padViewRect, ballViewRect)) {
-			ballView.onCollisionDetected(new Vector(0, -1), false);
+			ballView.onCollisionDetected(
+					new Vector(0, -1),
+					Math.min(1, (ballViewRect.right - padViewRect.left)
+							/ padViewRect.width()), false);
 		}
 
 		if (item == GameItem.BALL) {
@@ -260,14 +263,20 @@ public class GameLayout extends SurfaceView implements
 						&& ballViewRect.right > cellRect.left
 						&& ballViewRect.left < cellRect.right) {
 					cells.remove(cell);
-					ballView.onCollisionDetected(new Vector(0, -1), true);
+					ballView.onCollisionDetected(
+							new Vector(0, -1),
+							Math.min(1, (ballViewRect.right - cellRect.left)
+									/ cellRect.width()), true);
 					return;
 				} else if (ballViewRect.bottom > cellRect.bottom
 						&& ballViewRect.top < cellRect.bottom
 						&& ballViewRect.left < cellRect.right
 						&& ballViewRect.right > cellRect.left) {
 					cells.remove(cell);
-					ballView.onCollisionDetected(new Vector(0, 1), true);
+					ballView.onCollisionDetected(
+							new Vector(0, 1),
+							Math.min(1, (ballViewRect.right - cellRect.left)
+									/ cellRect.width()), true);
 					return;
 				}
 			}

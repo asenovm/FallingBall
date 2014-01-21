@@ -12,6 +12,7 @@ import edu.fmi.android.fallingball.GameItem;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
 import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
 import edu.fmi.fallingball.utils.ScreenUtil;
+import edu.fmi.fallingball.utils.Vector;
 
 public class BallView extends View {
 
@@ -19,6 +20,11 @@ public class BallView extends View {
 	 * {@value}
 	 */
 	public static final String TAG = BallView.class.getSimpleName();
+
+	/**
+	 * {@value}
+	 */
+	private static final int VELOCITY_X_MULTIPLIER = 4;
 
 	/**
 	 * {@value}
@@ -58,7 +64,7 @@ public class BallView extends View {
 	/**
 	 * {@value}
 	 */
-	private static final float VELOCITY_X_INITIAL = 0.2f;
+	private static final float VELOCITY_X_INITIAL = 0.5f;
 
 	/**
 	 * {@value}
@@ -77,51 +83,15 @@ public class BallView extends View {
 
 	private final Vector rightBorderVector;
 
+	private Vector speedVector;
+
 	private float positionX;
 
 	private float positionY;
 
-	private Vector speedVector;
-
 	private OnPositionChangedListener positionChangedListener;
 
 	private OnGameEventsListener gameEventsListener;
-
-	public static class Vector {
-		private float x;
-
-		private float y;
-
-		public Vector(final float x, final float y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		public Vector() {
-			this(0, 0);
-		}
-
-		public float dotProduct(final Vector other) {
-			return this.x * other.x + this.y * other.y;
-		}
-
-		public Vector multiply(final float coef) {
-			return new Vector(x * coef, y * coef);
-		}
-
-		public Vector add(final Vector other) {
-			return new Vector(x + other.x, y + other.y);
-		}
-
-		public Vector substract(final Vector other) {
-			return new Vector(x - other.x, y - other.y);
-		}
-
-		@Override
-		public String toString() {
-			return "x= " + x + " y= " + y;
-		}
-	}
 
 	public BallView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
@@ -182,8 +152,9 @@ public class BallView extends View {
 		this.positionChangedListener = listener;
 	}
 
-	public void onCollisionDetected(Vector vector, final boolean isCell) {
-		computeSpeedVector(vector);
+	public void onCollisionDetected(Vector vector, final float collisionRatio,
+			final boolean isCell) {
+		computeSpeedVector(vector, collisionRatio, isCell);
 		move(speedVector);
 		if (isCell) {
 			gameEventsListener.onGameScoreChanged();
@@ -193,6 +164,19 @@ public class BallView extends View {
 	private void computeSpeedVector(final Vector collisionVector) {
 		speedVector = speedVector.substract(collisionVector.multiply(2)
 				.multiply(speedVector.dotProduct(collisionVector)));
+	}
+
+	private void computeSpeedVector(final Vector collisionVector,
+			final float collisionRatio, final boolean isCell) {
+		computeSpeedVector(collisionVector);
+		if (!isCell) {
+			speedVector.x = getCollisionXVelocity(collisionRatio);
+		}
+	}
+
+	private float getCollisionXVelocity(final float collisionRatio) {
+		return -(0.5f - collisionRatio) * VELOCITY_X_MULTIPLIER
+				* VELOCITY_X_INITIAL;
 	}
 
 	private void move(final Vector speedVector) {
