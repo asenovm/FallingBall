@@ -2,6 +2,36 @@ package edu.fmi.fallingball.utils;
 
 public class Vector {
 
+	/**
+	 * {@value}
+	 */
+	private static final int ORIENTATION_Y_BORDER_TOP = 1;
+
+	/**
+	 * {@value}
+	 */
+	private static final int ORIENTATION_X_BORDER_TOP = 0;
+
+	/**
+	 * {@value}
+	 */
+	private static final int ORIENTATION_Y_BORDER_LEFT = 0;
+
+	/**
+	 * {@value}
+	 */
+	private static final int ORIENTATION_X_BORDER_LEFT = 1;
+
+	/**
+	 * {@value}
+	 */
+	private static final int ORIENTATION_Y_BORDER_RIGHT = 0;
+
+	/**
+	 * {@value}
+	 */
+	private static final int ORIENTATION_X_BORDER_RIGHT = -1;
+
 	public float x;
 
 	public float y;
@@ -31,4 +61,16 @@ public class Vector {
 		return new Vector(x - other.x, y - other.y);
 	}
 
+	public static Vector from(Direction direction) {
+		if (direction == Direction.LEFT) {
+			return new Vector(ORIENTATION_X_BORDER_LEFT,
+					ORIENTATION_Y_BORDER_LEFT);
+		} else if (direction == Direction.TOP) {
+			return new Vector(ORIENTATION_X_BORDER_TOP,
+					ORIENTATION_Y_BORDER_TOP);
+		} else {
+			return new Vector(ORIENTATION_X_BORDER_RIGHT,
+					ORIENTATION_Y_BORDER_RIGHT);
+		}
+	}
 }

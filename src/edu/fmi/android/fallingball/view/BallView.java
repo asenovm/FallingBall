@@ -11,6 +11,7 @@ import android.view.View;
 import edu.fmi.android.fallingball.GameItem;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
 import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
+import edu.fmi.fallingball.utils.Direction;
 import edu.fmi.fallingball.utils.ScreenUtil;
 import edu.fmi.fallingball.utils.Vector;
 
@@ -25,36 +26,6 @@ public class BallView extends View {
 	 * {@value}
 	 */
 	private static final int VELOCITY_X_MULTIPLIER = 4;
-
-	/**
-	 * {@value}
-	 */
-	private static final int ORIENTATION_Y_BORDER_TOP = 1;
-
-	/**
-	 * {@value}
-	 */
-	private static final int ORIENTATION_X_BORDER_TOP = 0;
-
-	/**
-	 * {@value}
-	 */
-	private static final int ORIENTATION_Y_BORDER_LEFT = 0;
-
-	/**
-	 * {@value}
-	 */
-	private static final int ORIENTATION_X_BORDER_LEFT = 1;
-
-	/**
-	 * {@value}
-	 */
-	private static final int ORIENTATION_Y_BORDER_RIGHT = 0;
-
-	/**
-	 * {@value}
-	 */
-	private static final int ORIENTATION_X_BORDER_RIGHT = -1;
 
 	/**
 	 * {@value}
@@ -105,13 +76,10 @@ public class BallView extends View {
 		positionX = screenSize.x / 2;
 		positionY = RADIUS_BALL;
 
+		topBorderVector = Vector.from(Direction.TOP);
+		leftBorderVector = Vector.from(Direction.LEFT);
+		rightBorderVector = Vector.from(Direction.RIGHT);
 		speedVector = new Vector(VELOCITY_X_INITIAL, VELOCITY_Y_INITIAL);
-		leftBorderVector = new Vector(ORIENTATION_X_BORDER_LEFT,
-				ORIENTATION_Y_BORDER_LEFT);
-		topBorderVector = new Vector(ORIENTATION_X_BORDER_TOP,
-				ORIENTATION_Y_BORDER_TOP);
-		rightBorderVector = new Vector(ORIENTATION_X_BORDER_RIGHT,
-				ORIENTATION_Y_BORDER_RIGHT);
 
 		boundingRect = new RectF(positionX - RADIUS_BALL, positionY
 				- RADIUS_BALL, positionX + RADIUS_BALL, positionY + RADIUS_BALL);
