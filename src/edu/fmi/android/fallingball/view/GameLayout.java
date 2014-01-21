@@ -260,6 +260,7 @@ public class GameLayout extends SurfaceView implements
 	public void onPositionChanged(GameItem item, RectF position) {
 		if (item == GameItem.BALL) {
 			ballViewRect = position;
+			ballView.checkAndHandleCollision(cells);
 		} else if (item == GameItem.PAD) {
 			padViewRect = position;
 		}
@@ -269,34 +270,6 @@ public class GameLayout extends SurfaceView implements
 					new Vector(0, -1),
 					Math.min(1, (ballViewRect.right - padViewRect.left)
 							/ padViewRect.width()), false);
-		}
-
-		if (item == GameItem.BALL) {
-			for (final CellView cell : cells) {
-				final RectF cellRect = cell.getBoundingRect();
-
-				if (ballViewRect.bottom > cellRect.top
-						&& ballViewRect.bottom < cellRect.bottom
-						&& ballViewRect.right > cellRect.left
-						&& ballViewRect.left < cellRect.right) {
-					cells.remove(cell);
-					ballView.onCollisionDetected(
-							new Vector(0, -1),
-							Math.min(1, (ballViewRect.right - cellRect.left)
-									/ cellRect.width()), true);
-					return;
-				} else if (ballViewRect.bottom > cellRect.bottom
-						&& ballViewRect.top < cellRect.bottom
-						&& ballViewRect.left < cellRect.right
-						&& ballViewRect.right > cellRect.left) {
-					cells.remove(cell);
-					ballView.onCollisionDetected(
-							new Vector(0, 1),
-							Math.min(1, (ballViewRect.right - cellRect.left)
-									/ cellRect.width()), true);
-					return;
-				}
-			}
 		}
 	}
 

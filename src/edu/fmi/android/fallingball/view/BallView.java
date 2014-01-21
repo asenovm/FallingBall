@@ -1,5 +1,7 @@
 package edu.fmi.android.fallingball.view;
 
+import java.util.Collection;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -171,5 +173,38 @@ public class BallView extends View {
 	private void updatePosition(final RectF boundingRect) {
 		boundingRect.set(positionX - RADIUS_BALL, positionY - RADIUS_BALL,
 				positionX + RADIUS_BALL, positionY + RADIUS_BALL);
+	}
+
+	public void checkAndHandleCollision(final Collection<CellView> cells) {
+		for (final CellView cell : cells) {
+			final RectF cellRect = cell.getBoundingRect();
+			final float collisionRatio = Math.min(1,
+					(boundingRect.right - cellRect.left) / cellRect.width());
+
+			if (isCollidingFromAbove(cellRect)) {
+				cells.remove(cell);
+				onCollisionDetected(new Vector(0, -1), collisionRatio, true);
+				return;
+			} else if (isCollidingFromBelow(cellRect)) {
+				cells.remove(cell);
+				onCollisionDetected(new Vector(0, 1), collisionRatio, true);
+				return;
+			}
+		}
+
+	}
+
+	private boolean isCollidingFromBelow(final RectF cellRect) {
+		return boundingRect.bottom > cellRect.bottom
+				&& boundingRect.top < cellRect.bottom
+				&& boundingRect.left < cellRect.right
+				&& boundingRect.right > cellRect.left;
+	}
+
+	private boolean isCollidingFromAbove(final RectF cellRect) {
+		return boundingRect.bottom > cellRect.top
+				&& boundingRect.bottom < cellRect.bottom
+				&& boundingRect.right > cellRect.left
+				&& boundingRect.left < cellRect.right;
 	}
 }
