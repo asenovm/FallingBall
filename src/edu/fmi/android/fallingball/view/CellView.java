@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
-import edu.fmi.android.gyroship.R;
+import edu.fmi.android.fallingball.R;
 
 public class CellView extends View {
 

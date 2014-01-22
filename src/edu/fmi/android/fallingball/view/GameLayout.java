@@ -19,9 +19,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import edu.fmi.android.fallingball.GameItem;
+import edu.fmi.android.fallingball.R;
 import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
 import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
-import edu.fmi.android.gyroship.R;
 import edu.fmi.fallingball.utils.ScreenUtil;
 
 public class GameLayout extends SurfaceView implements

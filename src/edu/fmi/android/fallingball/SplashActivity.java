@@ -1,6 +1,5 @@
 package edu.fmi.android.fallingball;
 
-import edu.fmi.android.gyroship.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

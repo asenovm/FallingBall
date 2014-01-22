@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
-import edu.fmi.android.gyroship.R;
+import edu.fmi.android.fallingball.R;
 import edu.fmi.fallingball.utils.ScreenUtil;
 
 public class FinishedGameView extends RelativeLayout {
