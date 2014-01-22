@@ -91,7 +91,7 @@ public class PadView extends View implements SensorEventListener {
 				.getSystemService(Context.SENSOR_SERVICE);
 		sensorManager.registerListener(this,
 				sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-				SensorManager.SENSOR_DELAY_GAME);
+				SensorManager.SENSOR_DELAY_UI);
 
 		shipPaint = new Paint();
 		shipPaint.setColor(Color.CYAN);
