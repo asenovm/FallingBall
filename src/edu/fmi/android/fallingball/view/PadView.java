@@ -59,9 +59,7 @@ public class PadView extends View implements SensorEventListener {
 
 	private float startX;
 
-	private long mLastRenderTime;
-
-	private float mRenderDelta;
+	private long lastRenderTime;
 
 	private float metersToPixelsX;
 
@@ -93,7 +91,7 @@ public class PadView extends View implements SensorEventListener {
 				.getSystemService(Context.SENSOR_SERVICE);
 		sensorManager.registerListener(this,
 				sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-				SensorManager.SENSOR_DELAY_UI);
+				SensorManager.SENSOR_DELAY_GAME);
 
 		shipPaint = new Paint();
 		shipPaint.setColor(Color.CYAN);
@@ -116,10 +114,10 @@ public class PadView extends View implements SensorEventListener {
 		final long renderTime = sensorTimeStamp
 				+ (System.nanoTime() - cpuTimeStamp);
 
-		if (mLastRenderTime != 0) {
-			final float renderDelta = (renderTime - mLastRenderTime)
+		if (lastRenderTime != 0) {
+			final float renderDelta = (renderTime - lastRenderTime)
 					/ NANOSECONDS_IN_A_SECOND;
-			if (mRenderDelta != 0) {
+			if (renderDelta != 0) {
 				positionX = positionX + accelerationX * renderDelta
 						* renderDelta;
 				positionY = positionY + accelerationY * renderDelta
@@ -127,9 +125,9 @@ public class PadView extends View implements SensorEventListener {
 				accelerationX = -sensorX;
 				accelerationY = -sensorY;
 			}
-			mRenderDelta = renderDelta;
 		}
-		mLastRenderTime = renderTime;
+
+		lastRenderTime = renderTime;
 
 		if (positionX > horizontalBound) {
 			positionX = horizontalBound;
@@ -187,14 +185,6 @@ public class PadView extends View implements SensorEventListener {
 		startX = Math.round(width - PADDLE_WIDTH * metersToPixelsX) * 0.5f;
 		horizontalBound = (width / metersToPixelsX - PADDLE_WIDTH) * 0.5f;
 		verticalBound = height;
-	}
-
-	public float getX() {
-		return positionX;
-	}
-
-	public float getY() {
-		return positionY;
 	}
 
 	public void setOnPositionChangedListener(
