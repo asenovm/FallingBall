@@ -32,7 +32,7 @@ public class BallView extends View {
 	/**
 	 * {@value}
 	 */
-	private static final float VELOCITY_Y_INITIAL = 5f;
+	private static final float VELOCITY_Y_INITIAL = 6f;
 
 	/**
 	 * {@value}
