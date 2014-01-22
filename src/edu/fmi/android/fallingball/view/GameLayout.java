@@ -110,6 +110,10 @@ public class GameLayout extends SurfaceView implements
 						backgroundPaint);
 
 				if (isGameFinished) {
+					finishedGameView.setWin(false);
+					finishedGameView.draw(canvas);
+				} else if (cells.isEmpty()) {
+					finishedGameView.setWin(true);
 					finishedGameView.draw(canvas);
 				} else {
 					padView.draw(canvas);
@@ -177,7 +181,7 @@ public class GameLayout extends SurfaceView implements
 	private class GameLayoutOnClickListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
-			if (isGameFinished) {
+			if (isGameFinished || cells.isEmpty()) {
 				gameEventsListener.onGameEnd();
 			}
 		}

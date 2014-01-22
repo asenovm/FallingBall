@@ -31,17 +31,24 @@ public class FinishedGameView extends RelativeLayout {
 	/**
 	 * {@value}
 	 */
+	private static final String TEXT_GAME_WIN = "You won the game. Congratulations.";
+
+	/**
+	 * {@value}
+	 */
 	private static final String TEXT_TAP_TO_CONTINUE = "Tap anywhere to continue.";
 
-	private final float gameOverTextX;
+	private float resultTextX;
 
-	private final float gameOverTextY;
+	private float resultTextY;
 
-	private final float tapTextX;
+	private float tapTextX;
 
-	private final float tapTextY;
+	private float tapTextY;
 
 	private final Paint textPaint;
+
+	private String resultText;
 
 	public FinishedGameView(Context context, AttributeSet attrs,
 			int defStyleAttr) {
@@ -51,16 +58,6 @@ public class FinishedGameView extends RelativeLayout {
 		textPaint.setColor(Color.WHITE);
 		textPaint.setTextSize(TEXT_SIZE);
 
-		final Point screenSize = ScreenUtil.getScreenSize(context);
-
-		final float gameOverTextWidth = textPaint.measureText(TEXT_GAME_OVER);
-		gameOverTextX = (screenSize.x - gameOverTextWidth) / 2;
-		gameOverTextY = (screenSize.y - textPaint.ascent() - textPaint
-				.descent() - TEXT_SIZE) / 2;
-
-		final float tapTextWidth = textPaint.measureText(TEXT_TAP_TO_CONTINUE);
-		tapTextX = (screenSize.x - tapTextWidth) / 2;
-		tapTextY = (screenSize.y - textPaint.ascent() - textPaint.descent() + TEXT_SIZE) / 2;
 	}
 
 	public FinishedGameView(Context context, AttributeSet attrs) {
@@ -76,7 +73,25 @@ public class FinishedGameView extends RelativeLayout {
 		super.dispatchDraw(canvas);
 
 		canvas.drawColor(getResources().getColor(R.color.transparent_black));
-		canvas.drawText(TEXT_GAME_OVER, gameOverTextX, gameOverTextY, textPaint);
+		canvas.drawText(resultText, resultTextX, resultTextY, textPaint);
 		canvas.drawText(TEXT_TAP_TO_CONTINUE, tapTextX, tapTextY, textPaint);
+	}
+
+	public void setWin(final boolean won) {
+		if (won) {
+			resultText = TEXT_GAME_WIN;
+		} else {
+			resultText = TEXT_GAME_OVER;
+		}
+
+		final Point screenSize = ScreenUtil.getScreenSize(getContext());
+
+		final float tapTextWidth = textPaint.measureText(TEXT_TAP_TO_CONTINUE);
+		tapTextX = (screenSize.x - tapTextWidth) / 2;
+		tapTextY = (screenSize.y - textPaint.ascent() - textPaint.descent() + TEXT_SIZE) / 2;
+
+		final float resultTextWidth = textPaint.measureText(resultText);
+		resultTextX = (screenSize.x - resultTextWidth) / 2;
+		resultTextY = (screenSize.y - textPaint.ascent() - textPaint.descent() - TEXT_SIZE) / 2;
 	}
 }
