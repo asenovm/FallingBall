@@ -1,4 +1,4 @@
-package edu.fmi.android.fallingball;
+package edu.fmi.android.brickpong;
 
 import android.app.Activity;
 import android.content.Intent;

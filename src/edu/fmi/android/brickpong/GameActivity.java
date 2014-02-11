@@ -1,9 +1,11 @@
-package edu.fmi.android.fallingball;
+package edu.fmi.android.brickpong;
 
 import android.app.Activity;
 import android.os.Bundle;
-import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
-import edu.fmi.android.fallingball.view.GameLayout;
+import android.view.Window;
+import android.view.WindowManager;
+import edu.fmi.android.brickpong.listeners.OnGameEventsListener;
+import edu.fmi.android.brickpong.view.GameLayout;
 
 public class GameActivity extends Activity implements OnGameEventsListener {
 
@@ -14,6 +16,9 @@ public class GameActivity extends Activity implements OnGameEventsListener {
 		final GameLayout gameLayout = new GameLayout(this);
 		gameLayout.setOnGameEventsListener(this);
 		setContentView(gameLayout);
+
+		final Window window = getWindow();
+		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	@Override

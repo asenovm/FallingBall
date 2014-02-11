@@ -1,4 +1,4 @@
-package edu.fmi.android.fallingball.view;
+package edu.fmi.android.brickpong.view;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,11 +18,11 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import edu.fmi.android.fallingball.GameItem;
-import edu.fmi.android.fallingball.R;
-import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
-import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
-import edu.fmi.fallingball.utils.ScreenUtil;
+import edu.fmi.android.brickpong.GameItem;
+import edu.fmi.android.brickpong.R;
+import edu.fmi.android.brickpong.listeners.OnGameEventsListener;
+import edu.fmi.android.brickpong.listeners.OnPositionChangedListener;
+import edu.fmi.android.brickpong.utils.ScreenUtil;
 
 public class GameLayout extends SurfaceView implements
 		OnPositionChangedListener, OnGameEventsListener {

@@ -1,4 +1,4 @@
-package edu.fmi.android.fallingball.view;
+package edu.fmi.android.brickpong.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

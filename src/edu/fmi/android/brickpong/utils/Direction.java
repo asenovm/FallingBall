@@ -1,4 +1,4 @@
-package edu.fmi.fallingball.utils;
+package edu.fmi.android.brickpong.utils;
 
 public enum Direction {
 	LEFT, TOP, RIGHT, BOTTOM;

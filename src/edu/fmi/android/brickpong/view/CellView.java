@@ -1,4 +1,4 @@
-package edu.fmi.android.fallingball.view;
+package edu.fmi.android.brickpong.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
-import edu.fmi.android.fallingball.R;
+import edu.fmi.android.brickpong.R;
 
 public class CellView extends View {
 

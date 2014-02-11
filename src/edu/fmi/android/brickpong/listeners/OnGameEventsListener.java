@@ -1,4 +1,4 @@
-package edu.fmi.android.fallingball.listeners;
+package edu.fmi.android.brickpong.listeners;
 
 /**
  * Implementations are listeners for game related events

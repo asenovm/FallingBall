@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.fmi.android.fallingball"
+    package="edu.fmi.android.brickpong"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -15,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="edu.fmi.android.fallingball.SplashActivity"
+            android:name="edu.fmi.android.brickpong.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape"
@@ -27,14 +29,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.fmi.android.fallingball.HomeActivity"
+            android:name="edu.fmi.android.brickpong.HomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape"
             android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
         </activity>
         <activity
-            android:name="edu.fmi.android.fallingball.GameActivity"
+            android:name="edu.fmi.android.brickpong.GameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape"

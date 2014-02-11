@@ -1,4 +1,4 @@
-package edu.fmi.android.fallingball.view;
+package edu.fmi.android.brickpong.view;
 
 import java.util.Collection;
 
@@ -10,12 +10,12 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
-import edu.fmi.android.fallingball.GameItem;
-import edu.fmi.android.fallingball.listeners.OnGameEventsListener;
-import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
-import edu.fmi.fallingball.utils.Direction;
-import edu.fmi.fallingball.utils.ScreenUtil;
-import edu.fmi.fallingball.utils.Vector;
+import edu.fmi.android.brickpong.GameItem;
+import edu.fmi.android.brickpong.listeners.OnGameEventsListener;
+import edu.fmi.android.brickpong.listeners.OnPositionChangedListener;
+import edu.fmi.android.brickpong.utils.Direction;
+import edu.fmi.android.brickpong.utils.ScreenUtil;
+import edu.fmi.android.brickpong.utils.Vector;
 
 public class BallView extends View {
 
@@ -27,7 +27,7 @@ public class BallView extends View {
 	/**
 	 * {@value}
 	 */
-	private static final int VELOCITY_X_MULTIPLIER = 4;
+	private static final int VELOCITY_X_MULTIPLIER = 5;
 
 	/**
 	 * {@value}

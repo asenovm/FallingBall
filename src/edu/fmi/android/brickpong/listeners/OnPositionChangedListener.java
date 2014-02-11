@@ -1,7 +1,7 @@
-package edu.fmi.android.fallingball.listeners;
+package edu.fmi.android.brickpong.listeners;
 
 import android.graphics.RectF;
-import edu.fmi.android.fallingball.GameItem;
+import edu.fmi.android.brickpong.GameItem;
 
 public interface OnPositionChangedListener {
 	/**

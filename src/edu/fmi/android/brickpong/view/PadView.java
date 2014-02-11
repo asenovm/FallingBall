@@ -1,4 +1,4 @@
-package edu.fmi.android.fallingball.view;
+package edu.fmi.android.brickpong.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -15,8 +15,8 @@ import android.view.Display;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
-import edu.fmi.android.fallingball.GameItem;
-import edu.fmi.android.fallingball.listeners.OnPositionChangedListener;
+import edu.fmi.android.brickpong.GameItem;
+import edu.fmi.android.brickpong.listeners.OnPositionChangedListener;
 
 public class PadView extends View implements SensorEventListener {
 
